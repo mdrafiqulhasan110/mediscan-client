@@ -94,9 +94,9 @@ const Header = ({ children }) => {
                 </div>
               </>
             ) : (
-              <button className='p-2 rounded-lg font-semibold   text-primary border border-primary bg-secondary hover:border-secondary hover:bg-primary hover:text-secondary '>
-                <NavLink to={"signin"}>Appointment</NavLink>
-              </button>
+              <NavLink to={"signin"}>
+                <button className='p-2 rounded-lg font-semibold   text-primary border border-primary bg-secondary hover:border-secondary hover:bg-primary hover:text-secondary '>Appointment</button>
+              </NavLink>
             )}
           </div>
         </div>
