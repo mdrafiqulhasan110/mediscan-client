@@ -1,6 +1,36 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Providers/AuthProvider";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
+  const navigate = useNavigate();
+  const { signIn, loginGoogle, setLoading } = useContext(AuthContext);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const pass = e.target.pass.value;
+    const email = e.target.email.value;
+    signIn(email, pass)
+      .then(() => {
+        navigate(location?.state ? location.state : "/");
+        toast.success("Logged in Succesfully");
+      })
+      .catch((error) => {
+        setLoading(false);
+        toast.error(error.code.slice(5, error.code.length));
+      });
+  };
+
+  const googleSignin = () => {
+    loginGoogle()
+      .then(() => {
+        navigate(location?.state ? location.state : "/");
+        toast.success("Logged in Succesfully");
+      })
+      .catch((error) => {
+        toast.error(error.code.slice(5, error.code.length));
+      });
+  };
   return (
     <div className='flex text-white w-full max-w-sm mx-auto overflow-hidde rounded-lg shadow-lg bg-gray-800 lg:max-w-4xl border border-primary'>
       <div
@@ -27,8 +57,8 @@ const SignIn = () => {
 
         <p className='mt-3 text-xl text-center text-gray-600 dark:text-gray-200'>Welcome back!</p>
 
-        <a
-          href='#'
+        <p
+          onClick={googleSignin}
           className='flex items-center justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600'
         >
           <div className='px-4 py-2'>
@@ -56,61 +86,59 @@ const SignIn = () => {
           </div>
 
           <span className='w-5/6 px-4 py-3 font-bold text-center'>Sign in with Google</span>
-        </a>
+        </p>
 
         <div className='flex items-center justify-between mt-4'>
           <span className='w-1/5 border-b dark:border-gray-600 lg:w-1/4'></span>
 
-          <a
-            href='#'
-            className='text-xs text-center text-gray-500 uppercase dark:text-gray-400 hover:underline'
-          >
-            or login with email
-          </a>
+          <p className='text-xs text-center text-gray-500 uppercase dark:text-gray-400 hover:underline'>or login with email</p>
 
           <span className='w-1/5 border-b dark:border-gray-400 lg:w-1/4'></span>
         </div>
-
-        <div className='mt-4'>
-          <label
-            className='block mb-2 text-sm font-medium text-gray-600 dark:text-gray-200'
-            htmlFor='LoggingEmailAddress'
-          >
-            Email Address
-          </label>
-          <input
-            id='LoggingEmailAddress'
-            className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
-            type='email'
-          />
-        </div>
-
-        <div className='mt-4'>
-          <div className='flex justify-between'>
+        <form onSubmit={handleSubmit}>
+          <div className='mt-4'>
             <label
               className='block mb-2 text-sm font-medium text-gray-600 dark:text-gray-200'
-              htmlFor='loggingPassword'
+              htmlFor='LoggingEmailAddress'
             >
-              Password
+              Email Address
             </label>
-            <a
-              href='#'
-              className='text-xs text-gray-500 dark:text-gray-300 hover:underline'
-            >
-              Forget Password?
-            </a>
+            <input
+              id='LoggingEmailAddress'
+              name='email'
+              className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
+              type='email'
+            />
           </div>
 
-          <input
-            id='loggingPassword'
-            className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
-            type='password'
-          />
-        </div>
+          <div className='mt-4'>
+            <div className='flex justify-between'>
+              <label
+                className='block mb-2 text-sm font-medium text-gray-600 dark:text-gray-200'
+                htmlFor='loggingPassword'
+              >
+                Password
+              </label>
+              <a
+                href='#'
+                className='text-xs text-gray-500 dark:text-gray-300 hover:underline'
+              >
+                Forget Password?
+              </a>
+            </div>
 
-        <div className='mt-6'>
-          <button className='w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-primary rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50'>Sign In</button>
-        </div>
+            <input
+              id='loggingPassword'
+              name='pass'
+              className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
+              type='password'
+            />
+          </div>
+
+          <div className='mt-6'>
+            <button className='w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-primary rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50'>Sign In</button>
+          </div>
+        </form>
 
         <div className='flex items-center justify-between mt-4'>
           <span className='w-1/5 border-b dark:border-gray-600 md:w-1/4'></span>

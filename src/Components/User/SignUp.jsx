@@ -1,10 +1,76 @@
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { updateProfile } from "firebase/auth";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from "../../Providers/AuthProvider";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const { createUser, logOut } = useContext(AuthContext);
+  const [strength, setstrength] = useState(false);
+  const [length, setlength] = useState(false);
+  const [character, setcharacter] = useState(false);
+  const [special, setspecial] = useState(false);
+  const [match, setmatch] = useState(true);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const image = e.target.image.value;
+    const email = e.target.email.value;
+    const pass = e.target.pass.value;
+    const pass2 = e.target.pass2.value;
+    console.log(name, image, email, pass);
+
+    if (pass != pass2) {
+      setmatch(false);
+    }
+    if (pass == pass2) {
+      setmatch(true);
+    }
+
+    if (length && character && special && match) {
+      createUser(email, pass)
+        .then((result) => {
+          console.log(result.user);
+          updateProfile(result.user, {
+            displayName: name,
+            photoURL: image,
+          });
+          toast.success("User Registration Successful");
+          logOut();
+          navigate("/signin");
+        })
+        .catch((error) => {
+          toast.error(error.code.slice(5, error.code.length));
+        });
+    }
+  };
+
+  const passwordCheck = (e) => {
+    setlength(false);
+    setcharacter(false);
+    setspecial(false);
+    setstrength(false);
+    const pass = e.target.value;
+    console.log(pass);
+    if (pass.length > 0) {
+      setstrength(true);
+    }
+    if (pass.length >= 6) {
+      setlength(true);
+    }
+    if (/[A-Z]/.test(pass)) {
+      setcharacter(true);
+    }
+    if (/[\W_]/.test(pass)) {
+      setspecial(true);
+    }
+  };
   return (
-    <div className='flex text-white w-full max-w-sm mx-auto overflow-hidde rounded-lg shadow-lg bg-gray-800 lg:max-w-4xl border border-primary'>
+    <div className='flex flex-row-reverse text-white w-full max-w-sm mx-auto overflow-hidde rounded-lg shadow-lg bg-gray-800 lg:max-w-4xl border border-primary'>
       <div
-        className='hidden bg-contain bg-center rounded-l-lg bg-white bg-no-repeat lg:block lg:w-1/2'
+        className='hidden bg-contain bg-center rounded-r-lg bg-white bg-no-repeat lg:block lg:w-1/2'
         style={{ backgroundImage: "url('/doctor.png')" }}
       ></div>
 
@@ -25,102 +91,144 @@ const SignUp = () => {
           </Link>
         </div>
 
-        <p className='mt-3 text-xl text-center text-gray-600 dark:text-gray-200'>Welcome back!</p>
-
-        <a
-          href='#'
-          className='flex items-center justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600'
-        >
-          <div className='px-4 py-2'>
-            <svg
-              className='w-6 h-6'
-              viewBox='0 0 40 40'
-            >
-              <path
-                d='M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.045 27.2142 24.3525 30 20 30C14.4775 30 10 25.5225 10 20C10 14.4775 14.4775 9.99999 20 9.99999C22.5492 9.99999 24.8683 10.9617 26.6342 12.5325L31.3483 7.81833C28.3717 5.04416 24.39 3.33333 20 3.33333C10.7958 3.33333 3.33335 10.7958 3.33335 20C3.33335 29.2042 10.7958 36.6667 20 36.6667C29.2042 36.6667 36.6667 29.2042 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z'
-                fill='#FFC107'
-              />
-              <path
-                d='M5.25497 12.2425L10.7308 16.2583C12.2125 12.59 15.8008 9.99999 20 9.99999C22.5491 9.99999 24.8683 10.9617 26.6341 12.5325L31.3483 7.81833C28.3716 5.04416 24.39 3.33333 20 3.33333C13.5983 3.33333 8.04663 6.94749 5.25497 12.2425Z'
-                fill='#FF3D00'
-              />
-              <path
-                d='M20 36.6667C24.305 36.6667 28.2167 35.0192 31.1742 32.34L26.0159 27.975C24.3425 29.2425 22.2625 30 20 30C15.665 30 11.9842 27.2359 10.5975 23.3784L5.16254 27.5659C7.92087 32.9634 13.5225 36.6667 20 36.6667Z'
-                fill='#4CAF50'
-              />
-              <path
-                d='M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.7592 25.1975 27.56 26.805 26.0133 27.9758C26.0142 27.975 26.015 27.975 26.0158 27.9742L31.1742 32.3392C30.8092 32.6708 36.6667 28.3333 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z'
-                fill='#1976D2'
-              />
-            </svg>
-          </div>
-
-          <span className='w-5/6 px-4 py-3 font-bold text-center'>Sign in with Google</span>
-        </a>
+        <p className='mt-3 text-xl text-center text-gray-600 dark:text-gray-200'>Welcome</p>
 
         <div className='flex items-center justify-between mt-4'>
           <span className='w-1/5 border-b dark:border-gray-600 lg:w-1/4'></span>
 
-          <a
-            href='#'
-            className='text-xs text-center text-gray-500 uppercase dark:text-gray-400 hover:underline'
-          >
-            or login with email
-          </a>
+          <p className='text-xs text-center text-gray-500 uppercase dark:text-gray-400 hover:underline'>Register Here</p>
 
           <span className='w-1/5 border-b dark:border-gray-400 lg:w-1/4'></span>
         </div>
-
-        <div className='mt-4'>
-          <label
-            className='block mb-2 text-sm font-medium text-gray-600 dark:text-gray-200'
-            htmlFor='LoggingEmailAddress'
-          >
-            Email Address
-          </label>
-          <input
-            id='LoggingEmailAddress'
-            className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
-            type='email'
-          />
-        </div>
-
-        <div className='mt-4'>
-          <div className='flex justify-between'>
-            <label
-              className='block mb-2 text-sm font-medium text-gray-600 dark:text-gray-200'
-              htmlFor='loggingPassword'
-            >
-              Password
-            </label>
-            <a
-              href='#'
-              className='text-xs text-gray-500 dark:text-gray-300 hover:underline'
-            >
-              Forget Password?
-            </a>
+        <form onSubmit={handleSubmit}>
+          <div className='mt-4'>
+            <input
+              className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
+              type='email'
+              name='email'
+              placeholder='Email'
+              required
+            />
+          </div>
+          <div className='mt-4'>
+            <input
+              className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
+              type='text'
+              name='image'
+              placeholder='Image URL'
+            />
           </div>
 
-          <input
-            id='loggingPassword'
-            className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
-            type='password'
-          />
-        </div>
+          <div className='flex gap-2'>
+            <div className='mt-4 w-full'>
+              <input
+                className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
+                type='text'
+                name='name'
+                placeholder='Name'
+                required
+              />
+            </div>
+            <div className='mt-4 w-full'>
+              <select
+                className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
+                required
+                name='district'
+                defaultValue={""}
+              >
+                <option
+                  disabled
+                  value=''
+                >
+                  Blood Group
+                </option>
+                <option value='a+'>A+</option>
+                <option value='a-'>A-</option>
+                <option value='b+'>B+</option>
+                <option value='b-'>B-</option>
+                <option value='ab+'>AB+</option>
+                <option value='ab-'>AB-</option>
+                <option value='o+'>O+</option>
+                <option value='o-'>O-</option>
+              </select>
+            </div>
+          </div>
+          <div className='flex gap-2'>
+            <div className='mt-4 w-full'>
+              <select
+                className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
+                required
+                name='district'
+                defaultValue={""}
+              >
+                <option
+                  disabled
+                  value=''
+                >
+                  Select District
+                </option>
+                <option value='fd'>Select da</option>
+              </select>
+            </div>
+            <div className='mt-4 w-full'>
+              <select
+                className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
+                required
+                name='upazila'
+                defaultValue={""}
+              >
+                <option
+                  disabled
+                  value=''
+                >
+                  Select Upazila
+                </option>
+                <option value='d'>a </option>
+              </select>
+            </div>
+          </div>
+          <div className='mt-4'>
+            <input
+              className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
+              type='password'
+              name='pass'
+              placeholder='Password'
+              required
+              onChange={passwordCheck}
+            />
+          </div>
+          {strength && (
+            <div className='text-left mb-4'>
+              <p>{length ? <span className='text-green-400'>✔</span> : <span className='text-red-400'>✖</span>} Password must contain atleast 6 characters.</p>
+              <p>{character ? <span className='text-green-400'>✔</span> : <span className='text-red-400'>✖</span>} Password must contain atleast 1 capital letter.</p>
+              <p>{special ? <span className='text-green-400'>✔</span> : <span className='text-red-400'>✖</span>} Password must contain atleast 1 special character.</p>
+            </div>
+          )}
+          <div className='mt-4'>
+            <input
+              className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
+              type='password'
+              name='pass2'
+              placeholder='Confirm Password'
+              required
+            />
+            {!match && <p>Password Not Matched</p>}
+          </div>
 
-        <div className='mt-6'>
-          <button className='w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50'>Sign In</button>
-        </div>
+          <div className='mt-6'>
+            <button className='w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-primary rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50'>Sign Up</button>
+          </div>
+        </form>
 
         <div className='flex items-center justify-between mt-4'>
           <span className='w-1/5 border-b dark:border-gray-600 md:w-1/4'></span>
 
-          <a
-            href='#'
+          <Link
+            to={"/signin"}
             className='text-xs text-gray-500 uppercase dark:text-gray-400 hover:underline'
           >
-            or sign up
-          </a>
+            or sign in
+          </Link>
 
           <span className='w-1/5 border-b dark:border-gray-600 md:w-1/4'></span>
         </div>
