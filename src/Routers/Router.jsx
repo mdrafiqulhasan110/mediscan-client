@@ -6,6 +6,7 @@ import SignInPage from "../Pages/SignInPage";
 import SignUpPage from "../Pages/SignUpPage";
 import AddBannerPage from "../Pages/AddBannerPage";
 import DashboardLayout from "../Layouts/DashboardLayout";
+import AllUsersPage from "../Pages/AllUsersPage";
 
 const Router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const Router = createBrowserRouter([
       {
         path: "addbanner",
         element: <AddBannerPage></AddBannerPage>,
+      },
+      {
+        path: "allusers",
+        element: <AllUsersPage></AllUsersPage>,
       },
     ],
   },

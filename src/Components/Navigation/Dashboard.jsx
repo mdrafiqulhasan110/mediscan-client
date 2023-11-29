@@ -1,9 +1,10 @@
 import { useContext } from "react";
 import { AuthContext } from "../../Providers/AuthProvider";
 import AdminMenu from "./AdminMenu";
+import { NavLink } from "react-router-dom";
 
 const Dashboard = ({ children }) => {
-  const { user, loading } = useContext(AuthContext);
+  const { user, loading, logOut } = useContext(AuthContext);
 
   if (loading) {
     return <p>Hello</p>;
@@ -20,20 +21,43 @@ const Dashboard = ({ children }) => {
         {/* Page content here */}
         {children}
       </div>
-      <div className='drawer-side bg-secondary h-auto'>
-        <div className='flex flex-col items-center mt-6 -mx-2'>
-          <img
-            className='object-cover w-24 h-24 mx-2 rounded-full'
-            src={user.photoURL}
-            alt='avatar'
-          />
-          <h4 className='mx-2 mt-2 font-medium text-gray-800 dark:text-gray-200'>{user.displayName}</h4>
+      <div className='drawer-side bg-secondary h-screen'>
+        <div className='flex h-full  flex-col'>
+          <div className='flex flex-col items-center my-10 -mx-2'>
+            <img
+              className='object-cover w-24 h-24 mx-2 rounded-full'
+              src={user.photoURL}
+              alt='avatar'
+            />
+            <h4 className='mx-2 mt-2 font-medium text-gray-800 dark:text-gray-200'>{user.displayName}</h4>
+          </div>
+          <div className='h-full flex flex-col justify-between'>
+            <ul className='menu lg:w-56 p-0 [&>li]:border-b [&>li:first-child]:border-t-4  text-white [&>li]:border-primary'>
+              <AdminMenu></AdminMenu>
+            </ul>
+            <ul className='menu lg:w-56 p-0 [&>li]:border-b [&>li:first-child]:border-t  text-white [&>li]:border-primary'>
+              <li>
+                <NavLink
+                  to={"/dashboard"}
+                  className={({ isActive, isPending }) => (isPending ? "bg-primary" : isActive ? "bg-primary rounded-none" : "")}
+                >
+                  Profile
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={"/"}
+                  className={({ isActive, isPending }) => (isPending ? "pending" : isActive ? "bg-primary rounded-none" : "")}
+                >
+                  Home
+                </NavLink>
+              </li>
+              <li>
+                <p onClick={() => logOut()}>Log Out</p>
+              </li>
+            </ul>
+          </div>
         </div>
-        <br />
-
-        <ul className='menu lg:w-56 p-0 [&>li]:border-b [&>li:first-child]:border-t  text-white [&>li]:border-primary'>
-          <AdminMenu></AdminMenu>
-        </ul>
       </div>
     </div>
   );

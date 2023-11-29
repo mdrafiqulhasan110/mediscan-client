@@ -13,13 +13,12 @@ const AdminMenu = () => {
       </li>
       <li>
         <NavLink
-          to={"/allusers"}
-          className={({ isActive, isPending }) => (isPending ? "pending" : isActive ? "bg-primary rounded-none" : "")}
+          to={"/dashboard/allusers"}
+          className={({ isActive, isPending }) => (isPending ? "bg-primary" : isActive ? "bg-primary rounded-none" : "")}
         >
           Users
         </NavLink>
       </li>
-      <div className='divider divider-accent my-20'></div>
 
       <li>
         <NavLink
