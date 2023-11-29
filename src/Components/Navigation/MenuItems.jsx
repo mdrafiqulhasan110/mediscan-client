@@ -1,14 +1,16 @@
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { AuthContext } from "../../Providers/AuthProvider";
 
 const MenuItems = () => {
-  const user = true;
+  const { user } = useContext(AuthContext);
   return (
     <>
       <li>
         <NavLink to={"/"}>Home</NavLink>
       </li>
       <li>
-        <NavLink to={"/"}>Home</NavLink>
+        <NavLink to={"/dashboard/addbanner"}>Add Banner</NavLink>
       </li>
       <li>
         <NavLink to={"/"}>Home</NavLink>

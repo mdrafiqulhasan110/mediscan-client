@@ -4,6 +4,8 @@ import HomePage from "../Pages/HomePage";
 import ErrorPage from "../Pages/ErrorPage";
 import SignInPage from "../Pages/SignInPage";
 import SignUpPage from "../Pages/SignUpPage";
+import AddBannerPage from "../Pages/AddBannerPage";
+import DashboardLayout from "../Layouts/DashboardLayout";
 
 const Router = createBrowserRouter([
   {
@@ -22,6 +24,17 @@ const Router = createBrowserRouter([
       {
         path: "/signup",
         element: <SignUpPage></SignUpPage>,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: <DashboardLayout></DashboardLayout>,
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
+      {
+        path: "addbanner",
+        element: <AddBannerPage></AddBannerPage>,
       },
     ],
   },

@@ -4,6 +4,7 @@ import { updateProfile } from "firebase/auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../../Providers/AuthProvider";
+import axios from "axios";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -16,11 +17,16 @@ const SignUp = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
-    const image = e.target.image.value;
+    const imageURL = e.target.image.value;
     const email = e.target.email.value;
+    const bloodGroup = e.target.bloodGroup.value;
+    const district = e.target.district.value;
+    const upazila = e.target.upazila.value;
+
     const pass = e.target.pass.value;
     const pass2 = e.target.pass2.value;
-    console.log(name, image, email, pass);
+
+    const newUser = { name, imageURL, email, bloodGroup, district, upazila };
 
     if (pass != pass2) {
       setmatch(false);
@@ -35,9 +41,17 @@ const SignUp = () => {
           console.log(result.user);
           updateProfile(result.user, {
             displayName: name,
-            photoURL: image,
+            photoURL: imageURL,
           });
           toast.success("User Registration Successful");
+          axios
+            .post("http://localhost:5000/user", newUser)
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
           logOut();
           navigate("/signin");
         })
@@ -77,7 +91,7 @@ const SignUp = () => {
       <div className='w-full px-6 py-8 md:px-8 lg:w-1/2'>
         <div className='flex justify-center mx-auto'>
           <Link
-            to={"./"}
+            to={"/"}
             className='flex items-center'
           >
             <img
@@ -133,7 +147,7 @@ const SignUp = () => {
               <select
                 className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
                 required
-                name='district'
+                name='bloodGroup'
                 defaultValue={""}
               >
                 <option

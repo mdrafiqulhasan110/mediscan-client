@@ -14,7 +14,7 @@ const Header = ({ children }) => {
       />
       <div className='drawer-content flex flex-col'>
         {/* Navbar */}
-        <div className='w-full navbar  border-b-primary border-b-4 mb-6'>
+        <div className='w-full navbar  border-b-primary border-b-4 '>
           <div className='w-full flex justify-between mx-auto max-w-[1400px] px-2'>
             <div>
               <div className='flex-none lg:hidden'>
@@ -27,7 +27,7 @@ const Header = ({ children }) => {
               </div>
               <div className='hidden lg:block'>
                 <Link
-                  to={"./"}
+                  to={"/"}
                   className='flex items-center'
                 >
                   <img
@@ -44,7 +44,7 @@ const Header = ({ children }) => {
             <div className=' flex lg:justify-between justify-end'>
               <div className='px-2 mx-2 lg:hidden'>
                 <Link
-                  to={"./"}
+                  to={"/"}
                   className='flex items-center'
                 >
                   <img
@@ -94,7 +94,7 @@ const Header = ({ children }) => {
                 </div>
               </>
             ) : (
-              <NavLink to={"signin"}>
+              <NavLink to={"/signin"}>
                 <button className='p-2 rounded-lg font-semibold   text-primary border border-primary bg-secondary hover:border-secondary hover:bg-primary hover:text-secondary '>Appointment</button>
               </NavLink>
             )}

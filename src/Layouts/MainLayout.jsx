@@ -10,7 +10,9 @@ const MainLayout = () => {
       <div className='flex flex-col justify-between min-h-screen'>
         <Header>
           <ToastContainer></ToastContainer>
-          <Outlet></Outlet>
+          <div className='mt-6'>
+            <Outlet></Outlet>
+          </div>
         </Header>
         <Footer></Footer>
       </div>
