@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAllUser from "../../Hooks/useAllUser";
+import { AiOutlineEye, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
 const AllUserData = () => {
   const [users] = useAllUser();
+  const navigate = useNavigate();
   return (
     <div>
       {users.length > 0 ? (
@@ -15,9 +17,9 @@ const AllUserData = () => {
                     <th className=' py-3 text-left text-xs font-medium uppercase'>Name</th>
                     <th className=' py-3 text-left text-xs font-medium uppercase'>District</th>
                     <th className=' py-3 text-left text-xs font-medium uppercase'>Upazila</th>
-                    <th className=' py-3 text-left text-xs font-medium uppercase'>Role</th>
-                    <th className=' py-3 text-left text-xs font-medium uppercase'>Status</th>
-                    <th className=' py-3 text-left text-xs font-medium uppercase'>Details</th>
+                    <th className=' py-3 text-center text-xs font-medium uppercase'>Role</th>
+                    <th className=' py-3 text-center  text-xs font-medium uppercase'>Status</th>
+                    <th className=' py-3 text-center text-xs font-medium uppercase'>Action</th>
                   </tr>
                 </thead>
                 <tbody className='bg-white'>
@@ -29,13 +31,27 @@ const AllUserData = () => {
                       <td className='pr-4 py-4 whitespace-nowrap'>{user.name.toUpperCase()}</td>
                       <td className='pr-4 py-4 whitespace-nowrap'>{user.district.toUpperCase()}</td>
                       <td className='pr-4 py-4 whitespace-nowrap'>{user.upazila.toUpperCase()}</td>
-                      <td className='pr-4 py-4 whitespace-nowrap'>{user.role.toUpperCase()}</td>
+                      <td className='pr-4 py-4 text-center whitespace-nowrap'>{user.role.toUpperCase()}</td>
 
-                      <td className='pr-4 py-4 whitespace-nowrap'>{user.status.toUpperCase()}</td>
-                      <td className='pr-4 py-4 whitespace-nowrap'>
-                        <Link to={`/users/${user._id}`}>
-                          <button className='p-2 bg-primary rounded-md text-white'>Details</button>
-                        </Link>
+                      <td className='pr-4 py-4 text-center whitespace-nowrap'>{user.status.toUpperCase()}</td>
+                      <td className='pr-4 py-4 flex gap-3 justify-center whitespace-nowrap'>
+                        <button
+                          onClick={() => {
+                            navigate(`/`);
+                          }}
+                        >
+                          <AiOutlineEye className='text-xl' />
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate(`/updatejob/${job._id}`);
+                          }}
+                        >
+                          <AiOutlineEdit className='text-xl' />
+                        </button>
+                        <button onClick={() => handleDelete(job._id)}>
+                          <AiOutlineDelete className='text-xl' />
+                        </button>
                       </td>
                     </tr>
                   ))}

@@ -1,10 +1,12 @@
-import { useContext } from "react";
-import { AuthContext } from "../../Providers/AuthProvider";
 import AdminMenu from "./AdminMenu";
 import { NavLink } from "react-router-dom";
+import useAuth from "../../Hooks/useAuth";
+import useAdmin from "../../Hooks/useAdmin";
 
 const Dashboard = ({ children }) => {
-  const { user, loading, logOut } = useContext(AuthContext);
+  const { user, loading, logOut } = useAuth();
+  const [isAdmin] = useAdmin();
+  console.log(isAdmin);
 
   if (loading) {
     return <p>Hello</p>;
@@ -30,6 +32,7 @@ const Dashboard = ({ children }) => {
               alt='avatar'
             />
             <h4 className='mx-2 mt-2 font-medium text-gray-800 dark:text-gray-200'>{user.displayName}</h4>
+            {isAdmin && <p>Admin</p>}
           </div>
           <div className='h-full flex flex-col justify-between'>
             <ul className='menu lg:w-56 p-0 [&>li]:border-b [&>li:first-child]:border-t-4  text-white [&>li]:border-primary'>

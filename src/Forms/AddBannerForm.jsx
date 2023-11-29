@@ -1,12 +1,17 @@
 import { useState } from "react";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 const AddBannerForm = () => {
+  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
+  const host = "https://api.imgbb.com/1/upload?key=b8c5a12a22627c5178af499ba5ac5c65";
   const [formData, setFormData] = useState({
     name: "",
     image: null,
     title: "",
     description: "",
-    couponCodeName: "",
+    couponCode: "",
     couponRate: "",
   });
 
@@ -20,18 +25,32 @@ const AddBannerForm = () => {
     setFormData({ ...formData, image: file });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form data submitted:", formData);
-    // You can add logic here to handle the file upload
-    setFormData({
-      name: "",
-      image: null,
-      title: "",
-      description: "",
-      couponCodeName: "",
-      couponRate: "",
+    const imageData = new FormData();
+    imageData.append("image", formData.image);
+    const res = await axiosPublic.post(host, imageData, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
     });
+    if (res.data.success) {
+      const banner = {
+        image: res.data.data.display_url,
+        title: formData.title,
+        description: formData.description,
+        couponCode: formData.couponCode,
+        couponRate: parseFloat(formData.couponRate),
+      };
+      //
+      const addedBanner = await axiosSecure.post("/banner", banner);
+      console.log(addedBanner);
+      if (addedBanner.status == 201) {
+        // show success popup
+        console.log("soccess");
+      }
+    }
   };
 
   return (
@@ -90,15 +109,15 @@ const AddBannerForm = () => {
       <div className='mb-4'>
         <label
           className='block mb-2 text-sm font-medium text-gray-600 '
-          htmlFor='couponCodeName'
+          htmlFor='couponCode'
         >
-          Coupon Code Name:
+          Coupon Code:
         </label>
         <input
           className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
           type='text'
-          name='couponCodeName'
-          value={formData.couponCodeName}
+          name='couponCode'
+          value={formData.couponCode}
           onChange={handleInputChange}
         />
       </div>
@@ -112,7 +131,7 @@ const AddBannerForm = () => {
         </label>
         <input
           className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring focus:ring-blue-300'
-          type='text'
+          type='number'
           name='couponRate'
           value={formData.couponRate}
           onChange={handleInputChange}
@@ -121,7 +140,7 @@ const AddBannerForm = () => {
 
       <div className='mb-4'>
         <button
-          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+          className='bg-primary w-full hover:bg-secondary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
           type='submit'
         >
           Submit
