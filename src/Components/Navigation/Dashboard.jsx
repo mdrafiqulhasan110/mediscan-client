@@ -4,13 +4,8 @@ import useAuth from "../../Hooks/useAuth";
 import useAdmin from "../../Hooks/useAdmin";
 
 const Dashboard = ({ children }) => {
-  const { user, loading, logOut } = useAuth();
+  const { user, logOut } = useAuth();
   const [isAdmin] = useAdmin();
-  console.log(isAdmin);
-
-  if (loading) {
-    return <p>Hello</p>;
-  }
 
   return (
     <div className='drawer drawer-open '>
@@ -32,7 +27,7 @@ const Dashboard = ({ children }) => {
               alt='avatar'
             />
             <h4 className='mx-2 mt-2 font-medium text-gray-800 dark:text-gray-200'>{user.displayName}</h4>
-            {isAdmin && <p>Admin</p>}
+            {isAdmin ? <p className='text-white bg-primary my-2 p-2 rounded-md'>Admin</p> : <p className='text-white bg-primary my-2 p-2 rounded-md'>User</p>}
           </div>
           <div className='h-full flex flex-col justify-between'>
             <ul className='menu lg:w-56 p-0 [&>li]:border-b [&>li:first-child]:border-t-4  text-white [&>li]:border-primary'>
@@ -41,7 +36,7 @@ const Dashboard = ({ children }) => {
             <ul className='menu lg:w-56 p-0 [&>li]:border-b [&>li:first-child]:border-t  text-white [&>li]:border-primary'>
               <li>
                 <NavLink
-                  to={"/dashboard"}
+                  to={"/dashboard/profile"}
                   className={({ isActive, isPending }) => (isPending ? "bg-primary" : isActive ? "bg-primary rounded-none" : "")}
                 >
                   Profile

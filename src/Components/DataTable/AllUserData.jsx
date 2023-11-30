@@ -1,10 +1,24 @@
 import { useNavigate } from "react-router-dom";
 import useAllUser from "../../Hooks/useAllUser";
-import { AiOutlineEye, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import Profile from "../User/Profile";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const AllUserData = () => {
-  const [users] = useAllUser();
-  const navigate = useNavigate();
+  const { users, refetch } = useAllUser();
+  const axiosSecure = useAxiosSecure();
+
+  const handleStatusChange = (id, request) => {
+    axiosSecure
+      .put(`/user/changestatus/${id}`, request)
+      .then(function (response) {
+        Swal.fire("Success", "User status changed", "success");
+        refetch();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   return (
     <div>
       {users.length > 0 ? (
@@ -24,36 +38,73 @@ const AllUserData = () => {
                 </thead>
                 <tbody className='bg-white'>
                   {users.map((user, index) => (
-                    <tr
-                      key={index}
-                      className='border-b border-primary'
-                    >
-                      <td className='pr-4 py-4 whitespace-nowrap'>{user.name.toUpperCase()}</td>
-                      <td className='pr-4 py-4 whitespace-nowrap'>{user.district.toUpperCase()}</td>
-                      <td className='pr-4 py-4 whitespace-nowrap'>{user.upazila.toUpperCase()}</td>
-                      <td className='pr-4 py-4 text-center whitespace-nowrap'>{user.role.toUpperCase()}</td>
+                    <>
+                      <tr
+                        key={index}
+                        className='border-b border-primary'
+                      >
+                        <td className='pr-4 py-4 '>{user.name.toUpperCase()}</td>
+                        <td className='pr-4 py-4 '>{user.district.toUpperCase()}</td>
+                        <td className='pr-4 py-4 '>{user.upazila.toUpperCase()}</td>
+                        <td className='pr-4 py-4 text-center '>{user.role.toUpperCase()}</td>
 
-                      <td className='pr-4 py-4 text-center whitespace-nowrap'>{user.status.toUpperCase()}</td>
-                      <td className='pr-4 py-4 flex gap-3 justify-center whitespace-nowrap'>
-                        <button
-                          onClick={() => {
-                            navigate(`/`);
-                          }}
+                        <td className='pr-4 py-4 text-center '>{user.status.toUpperCase()}</td>
+                        <td className='pr-4 py-4 text-center '>
+                          <div className='w-full flex gap-3 justify-center items-center h-auto'>
+                            <p
+                              onClick={() => document.getElementById(`modal${index}`).showModal()}
+                              className=' bg-primary p-1 rounded-md text-xs text-white cursor-pointer'
+                            >
+                              View
+                            </p>
+                            {user.role == "admin" ? (
+                              <p
+                                onClick={() => handleStatusChange(user._id, { role: "user" })}
+                                className=' bg-info p-1 rounded-md text-xs text-white cursor-pointer'
+                              >
+                                Make User
+                              </p>
+                            ) : (
+                              <p
+                                onClick={() => handleStatusChange(user._id, { role: "admin" })}
+                                className=' bg-primary p-1 rounded-md text-xs text-white cursor-pointer'
+                              >
+                                Make Admin
+                              </p>
+                            )}
+                            {user.status == "active" ? (
+                              <p
+                                onClick={() => handleStatusChange(user._id, { status: "blocked" })}
+                                className=' bg-error p-1 rounded-md text-xs text-white cursor-pointer'
+                              >
+                                Block
+                              </p>
+                            ) : (
+                              <p
+                                onClick={() => handleStatusChange(user._id, { status: "active" })}
+                                className=' bg-success p-1 rounded-md text-xs text-white cursor-pointer'
+                              >
+                                Unblock
+                              </p>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                      <dialog
+                        id={`modal${index}`}
+                        className='modal'
+                      >
+                        <div className='modal-box p-0'>
+                          <Profile user={user}></Profile>
+                        </div>
+                        <form
+                          method='dialog'
+                          className='modal-backdrop'
                         >
-                          <AiOutlineEye className='text-xl' />
-                        </button>
-                        <button
-                          onClick={() => {
-                            navigate(`/updatejob/${job._id}`);
-                          }}
-                        >
-                          <AiOutlineEdit className='text-xl' />
-                        </button>
-                        <button onClick={() => handleDelete(job._id)}>
-                          <AiOutlineDelete className='text-xl' />
-                        </button>
-                      </td>
-                    </tr>
+                          <button>close</button>
+                        </form>
+                      </dialog>
+                    </>
                   ))}
                 </tbody>
               </table>

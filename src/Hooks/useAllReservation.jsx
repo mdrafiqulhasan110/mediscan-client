@@ -1,23 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "./useAxiosSecure";
 
-const useAllBanner = () => {
+const useAllReservation = () => {
   const axiosSecure = useAxiosSecure();
 
   const {
-    data: banners = [],
+    data: reservations = [],
     isPending: loading,
     refetch,
   } = useQuery({
-    queryKey: ["banners"],
+    queryKey: ["reservations"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/banner");
-      console.log(res);
+      const res = await axiosSecure.get("/reservation");
       return res.data;
     },
   });
 
-  return { banners, loading, refetch };
+  return { reservations, loading, refetch };
 };
 
-export default useAllBanner;
+export default useAllReservation;

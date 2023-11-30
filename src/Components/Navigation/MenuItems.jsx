@@ -9,23 +9,15 @@ const MenuItems = () => {
       <li>
         <NavLink to={"/"}>Home</NavLink>
       </li>
+
       <li>
-        <NavLink to={"/dashboard/addbanner"}>Add Banner</NavLink>
-      </li>
-      <li>
-        <NavLink to={"/"}>Home</NavLink>
+        <NavLink to={"/alltests"}>AllTest</NavLink>
       </li>
 
       {user && (
         <>
           <li>
-            <NavLink to={"/"}>Home</NavLink>
-          </li>
-          <li>
-            <NavLink to={"/"}>Home</NavLink>
-          </li>
-          <li>
-            <NavLink to={"/"}>Home</NavLink>
+            <NavLink to={"/dashboard/Profile"}>Dashboard</NavLink>
           </li>
         </>
       )}

@@ -1,10 +1,10 @@
 import { Link, NavLink } from "react-router-dom";
 import { TbAdjustmentsHeart } from "react-icons/tb";
 import MenuItems from "./MenuItems";
+import useAuth from "../../Hooks/useAuth";
 
 const Header = ({ children }) => {
-  const user = false;
-
+  const { user, logOut } = useAuth();
   return (
     <div className='drawer'>
       <input
@@ -82,20 +82,19 @@ const Header = ({ children }) => {
                     className='mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52'
                   >
                     <li>
-                      <p className='hover:text-white'>
-                        Hello, <span className='underline text-blue-500'>{user.displayName}</span>
-                      </p>
+                      <Link to={"/dashboard/profile"}>
+                        <p className='hover:text-white'>DashBoard</p>
+                      </Link>
                     </li>
                     <li>
-                      {/* <p onClick={() => logOut()}>Logout</p> */}
-                      <p>Logout</p>
+                      <p onClick={() => logOut()}>Logout</p>
                     </li>
                   </ul>
                 </div>
               </>
             ) : (
               <NavLink to={"/signin"}>
-                <button className='p-2 rounded-lg font-semibold   text-primary border border-primary bg-secondary hover:border-secondary hover:bg-primary hover:text-secondary '>Appointment</button>
+                <button className='p-2 rounded-lg font-semibold   text-primary border border-primary bg-secondary hover:border-secondary hover:bg-primary hover:text-secondary '>Sign In</button>
               </NavLink>
             )}
           </div>

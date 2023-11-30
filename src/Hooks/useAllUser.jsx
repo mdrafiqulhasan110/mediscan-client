@@ -17,7 +17,7 @@ const useAllUser = () => {
     },
   });
 
-  return [users, loading, refetch];
+  return { users, loading, refetch };
 };
 
 export default useAllUser;

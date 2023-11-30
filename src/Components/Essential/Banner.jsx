@@ -1,6 +1,15 @@
 import { toast } from "react-toastify";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import { useEffect, useState } from "react";
 
-const Banner = ({ bannerinfo }) => {
+const Banner = () => {
+  const axiosPublic = useAxiosPublic();
+  const [bannerinfo, setBannerinfo] = useState({});
+  useEffect(() => {
+    axiosPublic.get("/banner/status/active").then((res) => {
+      setBannerinfo(res.data);
+    });
+  }, [axiosPublic]);
   return (
     <div>
       <div
@@ -16,12 +25,12 @@ const Banner = ({ bannerinfo }) => {
 
             <button
               onClick={() => {
-                navigator.clipboard.writeText(`${bannerinfo.couponCodeName}`);
-                toast.success(`Copied Coupon: ${bannerinfo.couponCodeName}`, { autoClose: 500 });
+                navigator.clipboard.writeText(`${bannerinfo.couponCode}`);
+                toast.success(`Copied Coupon: ${bannerinfo.couponCode}`, { autoClose: 500 });
               }}
               className='mb-5 btn uppercase border-2 border-dashed  border-primary'
             >
-              Use Coupon: {bannerinfo.couponCodeName}
+              Use Coupon: {bannerinfo.couponCode}
             </button>
             <br />
             <button className='btn uppercase bg-primary'>Browse All Test</button>

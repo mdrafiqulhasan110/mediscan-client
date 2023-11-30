@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async";
-import AddBannerForm from "../Forms/AddBannerForm";
+import AddBannerForm from "../Components/Forms/AddBannerForm";
 
 const AddBannerPage = () => {
   return (
